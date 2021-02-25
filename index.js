@@ -3,7 +3,6 @@ const app = express()
 app.use(express.json()) // for parsing application/json สำหรับเพื่อให้body ไม่เป็นค่าว่าง
 let movies = []
 
-
 app.get('/movies',(req,res) => {
     //input
 
@@ -15,6 +14,16 @@ app.get('/movies',(req,res) => {
   
 })
 
+app.get('/movies/:id', (req,res) => {
+    //input
+    let id = req.params.id
+    let movie = {}
+    //process
+    movie = movies[id]
+    //output
+    res.status(200).json(movie)
+
+})
 
 
 app.post('/movies',(req,res) => {
@@ -29,7 +38,7 @@ app.post('/movies',(req,res) => {
 
     let movieID = 0
    
-    //keyvalue กำหนดค่า
+     //keyvalue กำหนดค่า
     let newMovie = {
         titlemovie: title,
         plotmovie: plot,
