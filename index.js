@@ -1,8 +1,9 @@
 const express = require('express') //เรียกใช้ express
 const app = express()
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID
 app.use(express.json()) // for parsing application/json สำหรับเพื่อให้body ไม่เป็นค่าว่าง
-let movies = []
+
 const url = 'mongodb+srv://SuperAdmin:d961d955*@cluster0.zgoyb.mongodb.net/buflix?retryWrites=true&w=majority'
 const client = new MongoClient(url, { useNewUrlParser: true ,useUnifiedTopology: true});
 let db,moviesCollection
@@ -33,12 +34,14 @@ app.get('/movies', async (req,res) => {
   
 })
 
-app.get('/movies/:id', (req,res) => {
+app.get('/movies/:id', async (req,res) => {
     //input
     let id = req.params.id
-    let movie = {}
+    // let movie = {}
     //process
-    movie = movies[id]
+    // movie = movies[id]
+
+    const movie = await moviesCollection.findOne({ _id: ObjectID(id) })
     //output
     res.status(200).json(movie)
 
