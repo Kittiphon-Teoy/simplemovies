@@ -20,14 +20,16 @@ connect()
 
 
 
-app.get('/movies',(req,res) => {
+app.get('/movies', async (req,res) => {
     //input
 
     //process
-
+    
+    const cursor = await moviesCollection.find({}) 
+    const result = await cursor.toArray()
     //output
 
-    res.status(200).json(movies)
+    res.status(200).json(result)
   
 })
 
@@ -69,12 +71,12 @@ app.post('/movies', async (req,res) => {
     // console.log(`title: ${title}`)
     // console.log(`plot: ${plot}`)
     //process
-    const result = await moviesCollection.insertOne(newMovie)
+    const result = await moviesCollection.insertOne(newMovie) //insert data
     // movies.push(newMovie) //เอาข้อมูลยัดลง ar
     
     //n-1
     // movieID = movies.length - 1 //กำหนดให้ ar เริ่มจาก0 1-1=0 2-1=1
-    movieID= result.insertedId
+    movieID= result.insertedId //insert ID
 
 
     //output
