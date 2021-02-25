@@ -1,7 +1,24 @@
 const express = require('express') //เรียกใช้ express
 const app = express()
+const MongoClient = require('mongodb').MongoClient;
 app.use(express.json()) // for parsing application/json สำหรับเพื่อให้body ไม่เป็นค่าว่าง
 let movies = []
+const url = 'mongodb+srv://SuperAdmin:d961d955*@cluster0.zgoyb.mongodb.net/buflix?retryWrites=true&w=majority'
+const client = new MongoClient(url, { useNewUrlParser: true ,useUnifiedTopology: true});
+let db,moviesCollection
+//connect
+async function connect() {
+    await client.connect()
+     db=client.db('buflix')
+    moviesCollection = db.collection('movies')
+}
+connect()
+
+
+
+
+
+
 
 app.get('/movies',(req,res) => {
     //input
@@ -26,7 +43,7 @@ app.get('/movies/:id', (req,res) => {
 })
 
 
-app.post('/movies',(req,res) => {
+app.post('/movies', async (req,res) => {
     //input ต้องการเก็บข้อมูลอะไร
     let title = req.body.titlemovie     
     let plot  = req.body.plotmovie
@@ -52,11 +69,12 @@ app.post('/movies',(req,res) => {
     // console.log(`title: ${title}`)
     // console.log(`plot: ${plot}`)
     //process
-    movies.push(newMovie) //เอาข้อมูลยัดลง ar
+    const result = await moviesCollection.insertOne(newMovie)
+    // movies.push(newMovie) //เอาข้อมูลยัดลง ar
     
     //n-1
-    movieID = movies.length - 1 //กำหนดให้ ar เริ่มจาก0 1-1=0 2-1=1
-   
+    // movieID = movies.length - 1 //กำหนดให้ ar เริ่มจาก0 1-1=0 2-1=1
+    movieID= result.insertedId
 
 
     //output
